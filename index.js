@@ -1,26 +1,18 @@
 // Main file
 const http = require('http');
+const url = require('url');
+
 
 // Server setup
 const server  = http.createServer((req,res) => {
-    console.log(req)
-    console.log(req.method);
-    let route = req.url;
-    
-    switch(req.method) {
-        case 'GET':
-                res.end('Hello Aman\n');
-            break;
-        case 'POST':
-                res.end('Thanks for your contribution');
-            break;
-        case 'PUT':
-                res.end('It has just been updated');
-            break;
-        case 'DELETE':
-                res.end('We just deleted that sir');
-            break;
-    }
+    // Parse url 
+    let parsedUrl = url.parse(req.url,true);
+    // Get path
+    let trimmedPath = parsedUrl.pathname.replace(/^\/+|\/+$/g,'');
+    // Send response
+    res.end(`Hello Aman\n ${trimmedPath}`);
+
+    // Log
 })
 
 server.listen('2019',function() {
