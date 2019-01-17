@@ -5,6 +5,7 @@ const StringDecoder = require('string_decoder').StringDecoder;
 
 // Server setup
 const server  = http.createServer((req,res) => {
+    console.log('Req ',req);
     // Parse url 
     const parsedUrl = url.parse(req.url,true);
     // Get path
@@ -45,7 +46,7 @@ const server  = http.createServer((req,res) => {
             let payloadString = JSON.stringify(payload);
             // Return response
             res.writeHead(statusCode);
-
+            res.setHeader('Content-Type','application/json');
             res.end(payloadString);
 
             console.log('Returning this response: ',statusCode, payloadString)
