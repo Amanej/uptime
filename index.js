@@ -1,10 +1,39 @@
 // Main file
 const http = require('http');
+const https = require('https');
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
+const config = require('./config.js')
+var fs = require('fs');
 
 // Server setup
-const server  = http.createServer((req,res) => {
+    // Make server handle https and http
+const httpServer = http.createServer(function(req,res) {
+    unifiedServer(req,res)
+});
+
+// Start the HTTP server
+httpServer.listen(config.httpPort,function() {
+    console.log(`The server is listening on ${config.httpPort} in ${config.key} now`)
+})
+
+var httpsServerOptions = {
+    'key': fs.readFileSync('./https/key.pem'),
+    'cert': fs.readFileSync('./https/cert.pem')
+}
+// Instantiate the HTTPS server
+const httpsServer = https.createServer(httpsServerOptions,function(req,res) {
+    unifiedServer(req,res)
+})
+
+// Start the HTTP server
+console.log('httpsServerOptions ',httpsServerOptions);
+httpsServer.listen(config.httpsPort,function() {
+    console.log(`The server is listening on ${config.httpsPort} in ${config.key} now`)
+})
+
+// All server logic
+var unifiedServer = (req,res) => {
     console.log('Req ',req);
     // Parse url 
     const parsedUrl = url.parse(req.url,true);
@@ -54,20 +83,13 @@ const server  = http.createServer((req,res) => {
 
     })
 
-
-
-})
-
-server.listen('2019',function() {
-    console.log("The server is listening on 2019")
-})
+}
 
 // Handlers
 const handlers = {};
 
-handlers.sample = (data,callback) => {
-    // Callback HTTP status code, payload object
-    callback(406,{'name':'Aman Dude'})
+handlers.ping = (data,callback) => {
+    callback(200,{'name':'You messed up'})
 }
 handlers.notFound = (data,callback) => {
     callback(404,{'name':'You messed up'})
@@ -75,5 +97,6 @@ handlers.notFound = (data,callback) => {
 
 // Request router
 const router = {
-    'sample': handlers.sample
+    'sample': handlers.sample,
+    'ping': handlers.ping
 }
