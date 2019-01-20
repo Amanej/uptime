@@ -74,8 +74,8 @@ var unifiedServer = (req,res) => {
             // Converting payload to string
             let payloadString = JSON.stringify(payload);
             // Return response
-            res.writeHead(statusCode);
             res.setHeader('Content-Type','application/json');
+            res.writeHead(statusCode);
             res.end(payloadString);
 
             console.log('Returning this response: ',statusCode, payloadString)
@@ -89,7 +89,10 @@ var unifiedServer = (req,res) => {
 const handlers = {};
 
 handlers.ping = (data,callback) => {
-    callback(200,{'name':'You messed up'})
+    callback(200)
+}
+handlers.hello = (data,callback) => {
+    callback(200,{'message': 'Welcome stranger!'})
 }
 handlers.notFound = (data,callback) => {
     callback(404,{'name':'You messed up'})
@@ -97,6 +100,6 @@ handlers.notFound = (data,callback) => {
 
 // Request router
 const router = {
-    'sample': handlers.sample,
-    'ping': handlers.ping
+    'ping': handlers.ping,
+    'hello': handlers.hello
 }
