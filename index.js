@@ -78,7 +78,7 @@ var unifiedServer = (req,res) => {
             res.writeHead(statusCode);
             res.end(payloadString);
 
-            console.log('Returning this response: ',statusCode, payloadString)
+            //console.log('Returning this response: ',statusCode, payloadString)
         })
 
     })
